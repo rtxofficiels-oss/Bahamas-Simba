@@ -1,83 +1,211 @@
-/* Couleurs et Reset */
+/* --- Variables & Reset --- */
 :root {
-    --neon-pink: #ff00ff;
-    --neon-blue: #00f2ff;
-    --dark-bg: #0a0a0a;
+    --pink: #ff007f;
+    --blue: #00d4ff;
+    --dark: #050505;
+    --card-bg: #111;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: var(--dark-bg);
+    background-color: var(--dark);
     color: white;
-    scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
-/* Navigation */
-nav {
+/* --- Navigation --- */
+.navbar {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.8);
-    border-bottom: 2px solid var(--neon-pink);
+    padding: 20px 10%;
+    background: rgba(0, 0, 0, 0.9);
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 0, 127, 0.3);
 }
 
 .logo {
     font-family: 'Monoton', cursive;
-    color: var(--neon-pink);
-    text-shadow: 0 0 10px var(--neon-pink);
-    font-size: 2rem;
+    font-size: 1.8rem;
+    color: white;
+    letter-spacing: 2px;
 }
 
-ul { display: flex; list-style: none; }
-ul li a {
+.logo span {
+    color: var(--pink);
+    text-shadow: 0 0 10px var(--pink);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li a {
     color: white;
     text-decoration: none;
-    margin: 0 15px;
+    margin-left: 30px;
+    font-weight: 600;
     transition: 0.3s;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
 }
 
-ul li a:hover { color: var(--neon-blue); }
+.nav-links li a:hover {
+    color: var(--blue);
+    text-shadow: 0 0 8px var(--blue);
+}
 
-/* Hero Section */
+/* --- Hero Section --- */
 .hero {
-    height: 80vh;
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                url('https://images.alphacoders.com/441/441315.jpg') center/cover;
+    height: 100vh;
+    background: url('https://i.imgur.com/your-image-here.jpg') no-repeat center center/cover; /* Remplace par un screen de ton club */
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    position: relative;
 }
 
-.hero h2 {
-    font-size: 3.5rem;
-    text-shadow: 0 0 20px var(--neon-blue);
+.overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), var(--dark));
 }
 
+.hero-content {
+    position: relative;
+    z-index: 10;
+}
+
+.hero-content h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 5rem;
+    letter-spacing: 10px;
+    margin-bottom: 10px;
+    color: white;
+    text-shadow: 3px 3px var(--pink), -3px -3px var(--blue);
+}
+
+/* --- Boutons --- */
 .btn {
-    padding: 10px 25px;
-    background: transparent;
-    border: 2px solid var(--neon-pink);
-    color: var(--neon-pink);
+    padding: 12px 30px;
     text-decoration: none;
     font-weight: bold;
-    transition: 0.4s;
+    border-radius: 5px;
+    margin: 10px;
+    display: inline-block;
+    transition: 0.4s ease;
+    text-transform: uppercase;
 }
 
-.btn:hover {
-    background: var(--neon-pink);
+.btn-pink {
+    border: 2px solid var(--pink);
+    color: var(--pink);
+}
+
+.btn-pink:hover {
+    background: var(--pink);
     color: white;
-    box-shadow: 0 0 20px var(--neon-pink);
+    box-shadow: 0 0 20px var(--pink);
 }
 
-/* Menu */
-#menu { padding: 50px; text-align: center; }
-.menu-container { max-width: 600px; margin: auto; }
-.item {
+.btn-blue {
+    border: 2px solid var(--blue);
+    color: var(--blue);
+}
+
+.btn-blue:hover {
+    background: var(--blue);
+    color: white;
+    box-shadow: 0 0 20px var(--blue);
+}
+
+/* --- Sections Générales --- */
+section {
+    padding: 100px 10%;
+}
+
+h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* --- Menu Grid --- */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.menu-card {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid #222;
+    transition: 0.3s;
+}
+
+.menu-card:hover {
+    border-color: var(--blue);
+    transform: translateY(-5px);
+}
+
+.menu-card h4 {
+    color: var(--blue);
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.menu-card ul { list-style: none; }
+.menu-card li {
     display: flex;
     justify-content: space-between;
-    padding: 15px;
-    border-bottom: 1px dashed #333;
+    padding: 10px 0;
+    border-bottom: 1px solid #222;
+}
+
+/* --- Formulaire de Recrutement --- */
+.recruit-box {
+    max-width: 600px;
+    margin: auto;
+    background: #111;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(255, 0, 127, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input, select, textarea {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 12px;
+    margin-bottom: 15px;
+    color: white;
+    border-radius: 5px;
+}
+
+input:focus { border-color: var(--pink); outline: none; }
+
+footer {
+    text-align: center;
+    padding: 40px;
+    background: #000;
+    border-top: 1px solid #111;
+    font-size: 0.8rem;
+    color: #555;
 }
