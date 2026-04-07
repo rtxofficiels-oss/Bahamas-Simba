@@ -3,39 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bahamas Mamas | Los Santos</title>
+    <title>Bahamas Mamas | Los Santos Exclusive Club</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Monoton&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
     <header>
-        <nav>
-            <h1 class="logo">Bahamas Mamas</h1>
-            <ul>
+        <nav class="navbar">
+            <div class="logo">BAHAMAS <span>MAMAS</span></div>
+            <ul class="nav-links">
                 <li><a href="#home">Accueil</a></li>
+                <li><a href="#about">À Propos</a></li>
                 <li><a href="#menu">Carte</a></li>
-                <li><a href="#vip">Espace VIP</a></li>
+                <li><a href="#recrutement">Recrutement</a></li>
             </ul>
         </nav>
     </header>
 
     <section id="home" class="hero">
+        <div class="overlay"></div>
         <div class="hero-content">
-            <h2>Laissez la nuit vous emporter</h2>
-            <p>Le club le plus sélect de Del Perro Pier.</p>
-            <a href="#vip" class="btn">Réserver une table</a>
+            <h2 class="glitch" data-text="EXPERIENCE">EXPERIENCE</h2>
+            <p>Le temple de la nuit au cœur de Del Perro</p>
+            <div class="hero-btns">
+                <a href="#menu" class="btn btn-blue">Voir la Carte</a>
+                <a href="#recrutement" class="btn btn-pink">Nous Rejoindre</a>
+            </div>
         </div>
     </section>
 
-    <section id="menu">
-        <h3>Notre Carte</h3>
-        <div class="menu-container">
-            <div class="item"><span>Champagne Bling</span> <span>$5,000</span></div>
-            <div class="item"><span>Whisky Blue Ark</span> <span>$1,200</span></div>
-            <div class="item"><span>Cocktail Bahamas</span> <span>$450</span></div>
+    <section id="about" class="details">
+        <div class="container">
+            <h3>Plus qu'un simple club</h3>
+            <p>Le Bahamas Mamas n'est pas seulement un bar. C'est l'endroit où les alliances se nouent, où les VIP se cachent et où la musique ne s'arrête jamais. Systèmes de son dernière génération, alcool d'exception et sécurité assurée.</p>
         </div>
     </section>
+
+    <section id="menu" class="menu-section">
+        <h3 class="section-title">La Carte VIP</h3>
+        <div class="menu-grid">
+            <div class="menu-card">
+                <h4>Spiritueux</h4>
+                <ul>
+                    <li>Champagne Bling <span>$15,000</span></li>
+                    <li>Whisky Diamond <span>$8,000</span></li>
+                    <li>Vodka Premium <span>$5,500</span></li>
+                </ul>
+            </div>
+            <div class="menu-card">
+                <h4>Cocktails</h4>
+                <ul>
+                    <li>Bahamas Night <span>$1,200</span></li>
+                    <li>Tequila Sunrise <span>$950</span></li>
+                    <li>Blue Lagoon <span>$800</span></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="recrutement" class="recruitment">
+        <div class="recruit-box">
+            <h3>Rejoins le Staff</h3>
+            <p>Nous recherchons des Barmans, DJs et Agents de sécurité qualifiés.</p>
+            <form id="applyForm">
+                <input type="text" placeholder="Prénom Nom (RP)" required>
+                <input type="number" placeholder="Ancienneté en ville (semaines)" required>
+                <select>
+                    <option value="bar">Barman / Barmaid</option>
+                    <option value="secu">Sécurité / Videur</option>
+                    <option value="dj">DJ</option>
+                </select>
+                <textarea placeholder="Pourquoi vous ?" rows="4"></textarea>
+                <button type="submit" class="btn btn-pink">Envoyer ma Candidature</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Bahamas Mamas Nightclub - Los Santos | Design par [TonNom]</p>
+    </footer>
 
 </body>
 </html>
