@@ -3,86 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bahamas Mamas | Los Santos Exclusive Club</title>
+    <title>Bahamas Mamas | Luxury Lounge & Nightclub</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Monoton&family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600&family=Monoton&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <header>
-        <nav class="navbar">
-            <div class="logo">BAHAMAS <span>MAMAS</span></div>
-            <ul class="nav-links">
-                <li><a href="#home">Accueil</a></li>
-                <li><a href="#about">À Propos</a></li>
-                <li><a href="#menu">Carte</a></li>
-                <li><a href="#recrutement">Recrutement</a></li>
-            </ul>
-        </nav>
-    </header>
+    <nav class="main-nav">
+        <div class="logo">BAHAMAS</div>
+        <ul class="nav-links">
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#menu">La Carte</a></li>
+            <li><a href="#services">Services VIP</a></li>
+            <li><a href="#team">L'Équipe</a></li>
+            <li><a href="#contact" class="nav-btn">Réservations</a></li>
+        </ul>
+    </nav>
 
-    <section id="home" class="hero">
-        <div class="overlay"></div>
-        <div class="hero-content">
-            <h2 class="glitch" data-text="EXPERIENCE">EXPERIENCE</h2>
-            <p>Le temple de la nuit au cœur de Del Perro</p>
-            <div class="hero-btns">
-                <a href="#menu" class="btn btn-blue">Voir la Carte</a>
-                <a href="#recrutement" class="btn btn-pink">Nous Rejoindre</a>
+    <header id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-text">
+            <h5>Bienvenue à Del Perro</h5>
+            <h1>L'Élégance de la Nuit</h1>
+            <p>Découvrez une expérience sensorielle unique à Los Santos. Cocktails signatures, ambiance feutrée et DJ sets internationaux.</p>
+            <div class="hero-actions">
+                <a href="#menu" class="btn-gold">Découvrir la Carte</a>
+                <a href="#contact" class="btn-outline">Réserver une Table</a>
             </div>
         </div>
-    </section>
+    </header>
 
-    <section id="about" class="details">
+    <section class="intro">
         <div class="container">
-            <h3>Plus qu'un simple club</h3>
-            <p>Le Bahamas Mamas n'est pas seulement un bar. C'est l'endroit où les alliances se nouent, où les VIP se cachent et où la musique ne s'arrête jamais. Systèmes de son dernière génération, alcool d'exception et sécurité assurée.</p>
+            <div class="intro-content">
+                <h2>Un lieu mythique</h2>
+                <p>Depuis son ouverture, le <strong>Bahamas Mamas</strong> s'est imposé comme le point de ralliement de l'élite de San Andreas. Que ce soit pour un rendez-vous d'affaires discret en début de soirée ou pour célébrer jusqu'à l'aube, notre établissement vous offre un cadre sécurisé et prestigieux.</p>
+            </div>
         </div>
     </section>
 
     <section id="menu" class="menu-section">
-        <h3 class="section-title">La Carte VIP</h3>
-        <div class="menu-grid">
-            <div class="menu-card">
-                <h4>Spiritueux</h4>
-                <ul>
-                    <li>Champagne Bling <span>$15,000</span></li>
-                    <li>Whisky Diamond <span>$8,000</span></li>
-                    <li>Vodka Premium <span>$5,500</span></li>
-                </ul>
-            </div>
-            <div class="menu-card">
-                <h4>Cocktails</h4>
-                <ul>
-                    <li>Bahamas Night <span>$1,200</span></li>
-                    <li>Tequila Sunrise <span>$950</span></li>
-                    <li>Blue Lagoon <span>$800</span></li>
-                </ul>
+        <div class="container">
+            <h2 class="title-gold">Notre Sélection</h2>
+            <div class="menu-grid">
+                <div class="menu-category">
+                    <h3>Cocktails Signatures</h3>
+                    <div class="menu-item">
+                        <div class="item-header"><span>Del Perro Sunset</span><span class="price">$550</span></div>
+                        <p>Vodka, nectar de pêche, jus de cranberry frais et zeste de citron vert.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="item-header"><span>The Executive</span><span class="price">$850</span></div>
+                        <p>Whisky de 18 ans d'âge, sirop de sucre de canne fumé au bois de chêne.</p>
+                    </div>
+                </div>
+
+                <div class="menu-category">
+                    <h3>Finger Food de Luxe</h3>
+                    <div class="menu-item">
+                        <div class="item-header"><span>Plateau Caviar Beluga</span><span class="price">$2,500</span></div>
+                        <p>Servi avec blinis maison et crème acidulée.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="item-header"><span>Tapas à la Truffe</span><span class="price">$1,200</span></div>
+                        <p>Sélection de toasts gastronomiques infusés à la truffe noire.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="recrutement" class="recruitment">
-        <div class="recruit-box">
-            <h3>Rejoins le Staff</h3>
-            <p>Nous recherchons des Barmans, DJs et Agents de sécurité qualifiés.</p>
-            <form id="applyForm">
-                <input type="text" placeholder="Prénom Nom (RP)" required>
-                <input type="number" placeholder="Ancienneté en ville (semaines)" required>
-                <select>
-                    <option value="bar">Barman / Barmaid</option>
-                    <option value="secu">Sécurité / Videur</option>
-                    <option value="dj">DJ</option>
-                </select>
-                <textarea placeholder="Pourquoi vous ?" rows="4"></textarea>
-                <button type="submit" class="btn btn-pink">Envoyer ma Candidature</button>
-            </form>
+    <section id="team" class="team-section">
+        <div class="container">
+            <h2 class="title-gold">Direction & Staff</h2>
+            <div class="team-grid">
+                <div class="member">
+                    <div class="member-img placeholder-boss"></div>
+                    <h4>Marcus Bennett</h4>
+                    <span>Directeur Général</span>
+                </div>
+                <div class="member">
+                    <div class="member-img placeholder-staff"></div>
+                    <h4>Elena Rodriguez</h4>
+                    <span>Responsable Relations VIP</span>
+                </div>
+                <div class="member">
+                    <div class="member-img placeholder-dj"></div>
+                    <h4>DJ Pulse</h4>
+                    <span>Directeur Artistique</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="contact-card">
+            <h2>Réservation & Contact</h2>
+            <p>Une demande spéciale ? Un événement privé ? Contactez nos équipes ou passez nous voir directement au club.</p>
+            <div class="info-list">
+                <p>📍 <strong>Adresse :</strong> Del Perro Pier, Los Santos</p>
+                <p>📞 <strong>Téléphone :</strong> 555-0192 (En ville)</p>
+                <p>📧 <strong>Email :</strong> contact@bahamas-mamas.ls</p>
+            </div>
+            <a href="https://discord.gg/votrelien" class="btn-gold full-width">Rejoindre le Discord</a>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2026 Bahamas Mamas Nightclub - Los Santos | Design par [TonNom]</p>
+        <p>&copy; 2026 Bahamas Mamas Entreprise - Tous droits réservés.</p>
     </footer>
 
 </body>
