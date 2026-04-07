@@ -39,11 +39,9 @@
 
         @keyframes neonPulse {
             from { 
-                /* Retrait du filter drop-shadow pour le net */
                 text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 20px currentColor;
             }
             to { 
-                /* Retrait du filter drop-shadow pour le net */
                 text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 40px currentColor;
             }
         }
@@ -54,7 +52,6 @@
             top: 0;
             width: 100%;
             background: rgba(10, 10, 10, 0.95);
-            /* backdrop-filter blur retiré ici */
             z-index: 1000;
             padding: 1rem 0;
             border-bottom: 2px solid var(--neon-pink);
@@ -165,7 +162,7 @@
             font-size: clamp(1.1rem, 3vw, 1.4rem);
             max-width: 600px;
             margin: 0 auto 2.5rem;
-            opacity: 1; /* Texte net */
+            opacity: 1;
         }
 
         .cta-button {
@@ -368,15 +365,15 @@
                     </div>
                     <div class="form-group">
                         <label>Nombre de personnes</label>
-                        <select>
-                            <option>1-2 personnes</option>
-                            <option>VIP Table (4-6 pers.)</option>
-                            <option>Espace Privé (10+ pers.)</option>
-                        </select>
+                        <input type="number" min="1" placeholder="Ex: 4" required>
                     </div>
                     <div class="form-group">
-                        <label>Date souhaitée</label>
-                        <input type="date">
+                        <label>Date et Heure souhaitée</label>
+                        <input type="datetime-local" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Informations supplémentaires</label>
+                        <textarea rows="3" placeholder="Précisez vos besoins (Anniversaire, VIP, etc.)"></textarea>
                     </div>
                     <button type="submit" class="cta-button" style="width:100%; border:none; cursor:pointer;">Confirmer la demande</button>
                 </form>
