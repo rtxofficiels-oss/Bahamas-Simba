@@ -54,7 +54,7 @@
             top: 0;
             width: 100%;
             background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(20px);
+            /* Suppression du blur ici pour la navigation aussi si besoin, mais gardé léger pour le contraste */
             z-index: 1000;
             padding: 1rem 0;
             border-bottom: 2px solid var(--neon-pink);
@@ -165,7 +165,8 @@
             font-size: clamp(1.1rem, 3vw, 1.4rem);
             max-width: 600px;
             margin: 0 auto 2.5rem;
-            opacity: 0.9;
+            opacity: 1; /* Texte bien net */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); /* Ajout d'une ombre pour la lisibilité sans flou */
         }
 
         .cta-button {
@@ -195,21 +196,9 @@
             color: var(--neon-pink);
         }
 
-        /* ABOUT */
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
+        /* ABOUT - DEFLOUTAGE DU FOND */
         .feature {
-            background: var(--bg-card);
+            background: var(--bg-card); /* Flou retiré (backdrop-filter supprimé) */
             padding: 2rem;
             border-radius: 20px;
             text-align: center;
@@ -241,7 +230,7 @@
             gap: 3rem;
         }
         .reservation-form {
-            background: #111;
+            background: #111; /* Flou retiré ici aussi */
             padding: 2.5rem;
             border-radius: 20px;
             border: 1px solid var(--neon-purple);
@@ -327,7 +316,7 @@
                 </div>
             </div>
             <div class="about-img">
-                <img src="https://via.placeholder.com/500x300/1a0033/ff00ff?text=BAHAMAS+INTERIOR" alt="Club" style="width:100%; border-radius:20px; box-shadow: 0 0 20px var(--neon-pink);">
+                <img src="https://gta5mod.net/wp-content/uploads/2020/05/Bahamas-Mamas-Interior-Exterior-10.jpg" alt="Club" style="width:100%; border-radius:20px; border: 1px solid var(--neon-pink);">
             </div>
         </div>
     </section>
@@ -360,7 +349,11 @@
                 <form id="resForm">
                     <div class="form-group">
                         <label>Nom RP</label>
-                        <input type="text" placeholder="John Doe" required>
+                        <input type="text" placeholder="Ex: John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Numéro de téléphone</label>
+                        <input type="tel" placeholder="Ex: 555-XXXX" required>
                     </div>
                     <div class="form-group">
                         <label>Nombre de personnes</label>
@@ -372,7 +365,7 @@
                     </div>
                     <div class="form-group">
                         <label>Date souhaitée</label>
-                        <input type="date">
+                        <input type="date" required>
                     </div>
                     <button type="submit" class="cta-button" style="width:100%; border:none; cursor:pointer;">Confirmer la demande</button>
                 </form>
@@ -400,7 +393,6 @@
     </footer>
 
     <script>
-        // Menu Mobile
         const hamburger = document.getElementById('hamburger');
         const navLinks = document.getElementById('nav-links');
 
@@ -408,14 +400,12 @@
             navLinks.classList.toggle('active');
         });
 
-        // Fermer le menu après clic (mobile)
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
             });
         });
 
-        // Effet Header au scroll
         window.addEventListener('scroll', () => {
             const header = document.getElementById('main-header');
             if (window.scrollY > 50) {
