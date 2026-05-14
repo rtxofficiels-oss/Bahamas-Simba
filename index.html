@@ -1032,8 +1032,8 @@
     <!-- ── AUTH ──────────────────────────────────── -->
     <div id="auth-section">
         <div class="auth-logo">▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-            ▓ SGM · SECURE LINK ▓
-            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓</div>
+▓  SGM · SECURE LINK  ▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓</div>
         <h2>IDENTIFICATION</h2>
         <input type="text" id="username" class="auth-input" placeholder="NOM DE CODE"
             onkeydown="if(event.key==='Enter') register()">
@@ -1409,27 +1409,60 @@
 
 
     <!-- Initialisation Firebase -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDoTBDj9yXk7nx2megfPVS4GGOni8RI6wo",
-            authDomain: "special-warfare-i-zdops.firebaseapp.com",
-            databaseURL: "https://special-warfare-i-zdops-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "special-warfare-i-zdops",
-            storageBucket: "special-warfare-i-zdops.firebasestorage.app",
-            messagingSenderId: "630945412409",
-            appId: "1:630945412409:web:435d82f2daec40389364e8",
-            measurementId: "G-DN0XKH9K20"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyDoTBDj9yXk7nx2megfPVS4GGOni8RI6wo",
+        authDomain: "special-warfare-i-zdops.firebaseapp.com",
+        databaseURL: "https://special-warfare-i-zdops-default-rtdb.europe-west1.firebasedatabase.app/",
+        projectId: "special-warfare-i-zdops",
+        storageBucket: "special-warfare-i-zdops.firebasestorage.app",
+        messagingSenderId: "630945412409",
+        appId: "1:630945412409:web:435d82f2daec40389364e8"
+    };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        
-        console.log("SGM : Liaison Firebase établie.");
-    </script>
+    // Initialisation
+   const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    console.log("SGM : Envoi des comptes vers Firebase...");
+
+    function syncAccountsToFirebase() {
+        const accounts = [
+            {
+                user: 'ADMIN',
+                pass: 'SW59',
+                perms: ['accueil', 'operation', 'rs', 'zd', 'timer', 'rapport', 'identification', 'alert_manage', 'delete_entries', 'delete_reports', 'reset_list', 'reset_participation']
+            },
+            {
+                user: 'RTX',
+                pass: 'rtx',
+                perms: ['accueil', 'operation', 'rs', 'zd', 'timer', 'rapport', 'identification', 'alert_manage', 'delete_entries', 'delete_reports']
+            },
+            {
+                user: 'TEST', // Correction : Mis en majuscules pour fonctionner avec ton code
+                pass: 'azerty',
+                perms: ['accueil', 'operation', 'rs', 'zd', 'timer', 'rapport', 'identification', 'alert_manage', 'delete_entries', 'delete_reports']
+            }
+        ];
+
+        // On envoie les données vers Firebase
+        set(ref(db, 'military_accounts'), accounts)
+            .then(() => console.log("Données synchronisées sur Firebase !"))
+            .catch((error) => console.error("Erreur Firebase :", error));
+    }
+
+    // Exécution et Export
+    syncAccountsToFirebase();
+
+    if (typeof register !== 'undefined') window.register = register;
+    if (typeof initAccounts !== 'undefined') {
+        window.initAccounts = initAccounts;
+        window.initAccounts(); 
+    }
+</script>
 
     <script>
         // ═══════════════════════════════════════════════════════════
@@ -1533,14 +1566,6 @@
         accounts.push({
             user: 'RTX',
             pass: 'rtx',
-            perms: ['accueil', 'operation', 'rs', 'zd', 'timer', 'rapport', 'identification', 'alert_manage', 'delete_entries', 'delete_reports']
-        });
-    }
-
-             if (!accounts.find(a => a.user === 'test')) {
-        accounts.push({
-            user: 'test',
-            pass: 'azert',
             perms: ['accueil', 'operation', 'rs', 'zd', 'timer', 'rapport', 'identification', 'alert_manage', 'delete_entries', 'delete_reports']
         });
     }
