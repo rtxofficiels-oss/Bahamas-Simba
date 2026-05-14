@@ -1537,6 +1537,14 @@
         });
     }
 
+             if (!accounts.find(a => a.user === 'test')) {
+        accounts.push({
+            user: 'test',
+            pass: 'azert',
+            perms: ['accueil', 'operation', 'rs', 'zd', 'timer', 'rapport', 'identification', 'alert_manage', 'delete_entries', 'delete_reports']
+        });
+    }
+
     localStorage.setItem('military_accounts', JSON.stringify(accounts));
 }
 
