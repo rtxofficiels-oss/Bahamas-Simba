@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Système de Gestion Militaire - V3.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ── VARIABLES ─────────────────────────────────────── */
+        :root {
+            --green: #4CAF50;
+            --green2: #45a049;
+            --orange: #ff9800;
+            --red: #f44336;
+            --blue: #2196F3;
+            --bg: #111;
+            --bg2: #1a1a1a;
+            --bg3: #252525;
+            --bg4: #2d2d2d;
+            --border: #333;
+            --text: #e0e0e0;
+            --muted: #888;
+            --font-head: 'Rajdhani', sans-serif;
+            --font-mono: 'Share Tech Mono', 'Courier New', monospace;
+            --alert-color: var(--green);
+        }
+
+
+        /* ── RESET ─────────────────────────────────────────── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-head);
+            overflow: hidden;
+        }
+
+
+        body.logged-out {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body.logged-in {
+            display: block;
+        }
+
+
+        /* ── AUTH ──────────────────────────────────────────── */
+        #auth-section {
+            background: var(--bg4);
+            padding: 2.5rem 2rem;
+            border-radius: 6px;
+            box-shadow: 0 0 40px rgba(76, 175, 80, .15), 0 4px 20px rgba(0, 0, 0, .6);
+            width: 340px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #2a2a2a;
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        /* Scan-line animation */
+        #auth-section::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(transparent, rgba(76, 175, 80, .5), transparent);
+            animation: scan 2.5s linear infinite;
+        }
+
+        @keyframes scan {
+            to {
+                top: 200%;
+            }
+        }
+
+
+        .auth-logo {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--green);
+            letter-spacing: 3px;
+            margin-bottom: 1.5rem;
+            opacity: .7;
+            white-space: pre;
+            line-height: 1.3;
+            text-align: center;
+        }
+
+
+        #auth-section h2 {
+            font-family: var(--font-head);
+            color: var(--green);
+            letter-spacing: 4px;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            width: 100%;
+            text-align: center;
+        }
+
+
+        .auth-input {
+            width: 100%;
+            padding: 11px 14px;
+            margin-bottom: 10px;
+            border: 1px solid #3a3a3a;
+            border-radius: 4px;
+            background: var(--bg2);
+            color: var(--text);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            text-align: center;
+            letter-spacing: 2px;
+            transition: border-color .2s;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--green);
+        }
+
+        .auth-input::placeholder {
+            opacity: .4;
+            letter-spacing: 1px;
+        }
+
+
+        /* ── BUTTONS ───────────────────────────────────────── */
+        button {
+            width: 100%;
+            padding: 10px;
+            background: var(--green);
+            border: none;
+            color: white;
+            font-family: var(--font-head);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background .2s, box-shadow .2s;
+        }
+
+        button:hover {
+            background: var(--green2);
+            box-shadow: 0 0 12px rgba(76, 175, 80, .4);
+        }
+
+
+        .btn-sm {
+            width: auto;
+            padding: 4px 10px;
+            font-size: 0.78rem;
+            letter-spacing: 1px;
+        }
+
+        .btn-blue {
+            background: var(--blue);
+        }
+
+        .btn-blue:hover {
+            background: #1a7fcc;
+            box-shadow: 0 0 12px rgba(33, 150, 243, .4);
+        }
+
+        .btn-red {
+            background: var(--red);
+        }
+
+        .btn-red:hover {
+            background: #c62828;
+            box-shadow: 0 0 12px rgba(244, 67, 54, .4);
+        }
+
+        .btn-orange {
+            background: var(--orange);
+        }
+
+        .btn-orange:hover {
+            background: #e68900;
+            box-shadow: 0 0 12px rgba(255, 152, 0, .4);
+        }
+
+        .btn-muted {
+            background: #444;
+        }
+
+        .btn-muted:hover {
+            background: #555;
+            box-shadow: none;
+        }
+
+
+        /* ── DASHBOARD ─────────────────────────────────────── */
+        #dashboard {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            height: 100vh;
+        }
+
+
+        /* ── NAVBAR ────────────────────────────────────────── */
+        .navbar {
+            background: var(--bg4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 160px 12px 20px;
+            border-bottom: 2px solid var(--alert-color);
+            flex-shrink: 0;
+            position: relative;
+            transition: border-color .4s;
+        }
+
+
+        .nav-item {
+            padding: 5px 10px;
+            background: #3a3a3a;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            transition: background .2s, color .2s;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: var(--green);
+            color: #000;
+            border-color: transparent;
+        }
+
+
+        .alert-controls {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .alert-label {
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: var(--muted);
+            margin-right: 4px;
+            font-family: var(--font-mono);
+        }
+
+        .alert-btn {
+            width: auto;
+            padding: 4px 9px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, .15);
+        }
+
+        .btn-l1 {
+            background: var(--green);
+        }
+
+        .btn-l1:hover {
+            background: var(--green2);
+        }
+
+        .btn-l2 {
+            background: var(--orange);
+        }
+
+        .btn-l2:hover {
+            background: #e68900;
+        }
+
+        .btn-l3 {
+            background: var(--red);
+        }
+
+        .btn-l3:hover {
+            background: #c62828;
+        }
+
+
+        /* ── STATUS BANNER ─────────────────────────────────── */
+        #status-banner {
+            display: none;
+            background: var(--red);
+            color: white;
+            padding: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 3px;
+            animation: blink 1s ease-in-out infinite;
+            font-family: var(--font-mono);
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .5
+            }
+        }
+
+
+        /* ── LAYOUT ────────────────────────────────────────── */
+        .main-layout {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+
+        /* ── SIDEBAR ───────────────────────────────────────── */
+        .sidebar {
+            width: 210px;
+            background: var(--bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-title {
+            font-size: 0.8rem;
+            color: var(--green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            padding-left: 8px;
+            border-left: 2px solid var(--green);
+            font-family: var(--font-mono);
+        }
+
+        .user-list {
+            list-style: none;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 7px 8px;
+            margin-bottom: 4px;
+            background: rgba(255, 255, 255, .04);
+            border-radius: 3px;
+            font-size: 0.8rem;
+            border: 1px solid transparent;
+        }
+
+        .user-item:hover {
+            border-color: var(--border);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background: var(--green);
+            box-shadow: 0 0 6px var(--green);
+            flex-shrink: 0;
+        }
+
+
+        /* ── MAIN CONTENT ──────────────────────────────────── */
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+        }
+
+
+        /* ── CARDS ─────────────────────────────────────────── */
+        .op-card {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-top: 2px solid var(--green);
+            padding: 20px;
+            border-radius: 6px;
+            margin: 16px auto;
+            max-width: 620px;
+            text-align: left;
+        }
+
+        .op-card h3 {
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            font-family: var(--font-mono);
+        }
+
+
+        .field-label {
+            display: block;
+            color: var(--green);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            margin-top: 12px;
+        }
+
+        .field-label:first-child {
+            margin-top: 0;
+        }
+
+
+        .op-input,
+        .rs-input,
+        .zd-input {
+            width: 100%;
+            background: var(--bg2);
+            border: 1px solid #3a3a3a;
+            color: var(--orange);
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            transition: border-color .2s;
+            resize: none;
+        }
+
+        .op-input:focus,
+        .rs-input:focus,
+        .zd-input:focus {
+            outline: none;
+            border-color: var(--green);
+        }
+
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+
+        /* ── ENTRIES ───────────────────────────────────────── */
+        .history-container {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .history-container h3 {
+            color: var(--green);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            font-family: var(--font-mono);
+        }
+
+
+        .entry-card {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--green);
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 0 4px 4px 0;
+            font-size: 0.85rem;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .entry-name {
+            color: var(--green);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .entry-body {
+            display: flex;
+            gap: 14px;
+        }
+
+        .entry-photo {
+            max-width: 90px;
+            max-height: 90px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            object-fit: cover;
+        }
+
+        .entry-desc {
+            font-style: italic;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+
+        /* Danger badge */
+        .danger-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .danger-low {
+            background: rgba(76, 175, 80, .2);
+            color: var(--green);
+        }
+
+        .danger-medium {
+            background: rgba(255, 152, 0, .2);
+            color: var(--orange);
+        }
+
+        .danger-high {
+            background: rgba(244, 67, 54, .2);
+            color: var(--red);
+        }
+
+
+        /* ── TEAM SECTION ──────────────────────────────────── */
+        .team-box {
+            margin-top: 16px;
+            padding: 12px;
+            border: 1px dashed rgba(76, 175, 80, .4);
+            background: rgba(76, 175, 80, .05);
+            border-radius: 4px;
+        }
+
+        .team-box h4 {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-family: var(--font-mono);
+        }
+
+        #op-team-list {
+            font-size: 0.85rem;
+            color: var(--orange);
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+
+        /* ── TIMER ─────────────────────────────────────────── */
+        .timer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .timer-panel h3 {
+            color: var(--orange);
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+
+        .timer-entry {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--orange);
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 0 4px 4px 0;
+            font-size: 0.85rem;
+        }
+
+        .countdown {
+            font-family: var(--font-mono);
+            font-size: 1.4rem;
+            color: var(--red);
+            font-weight: 700;
+            background: rgba(0, 0, 0, .5);
+            padding: 4px 8px;
+            display: inline-block;
+            border-radius: 3px;
+            margin-top: 4px;
+            letter-spacing: 2px;
+        }
+
+        .countdown.expired {
+            color: var(--muted);
+        }
+
+
+        /* ── RAPPORT ───────────────────────────────────────── */
+        .rapport-row {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+        }
+
+        .rapport-row:last-child {
+            border-bottom: none;
+        }
+
+        .rapport-key {
+            color: var(--muted);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            width: 180px;
+            flex-shrink: 0;
+            text-transform: uppercase;
+        }
+
+        .rapport-val {
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+
+        /* ── CHAT ──────────────────────────────────────────── */
+        #chat-window {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            height: 260px;
+            background: var(--bg3);
+            border: 1px solid rgba(76, 175, 80, .4);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .5);
+        }
+
+        #chat-header {
+            background: var(--green);
+            color: #000;
+            padding: 6px 12px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            font-family: var(--font-mono);
+            border-radius: 5px 5px 0 0;
+        }
+
+        #messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            font-family: var(--font-mono);
+        }
+
+        #messages::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #messages::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .msg-time {
+            color: var(--muted);
+            font-size: 0.75rem;
+            margin-right: 6px;
+        }
+
+
+        .chat-input-area {
+            display: flex;
+            padding: 6px;
+            gap: 5px;
+            border-top: 1px solid var(--border);
+        }
+
+        #chat-input {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+
+        #chat-input::placeholder {
+            color: var(--muted);
+        }
+
+        .chat-send-btn {
+            width: auto;
+            padding: 3px 10px;
+            font-size: 0.78rem;
+            border-radius: 3px;
+            letter-spacing: 0;
+        }
+
+
+        /* ── ACCUEIL ───────────────────────────────────────── */
+        .home-logo {
+            font-family: var(--font-mono);
+            font-size: 0.55rem;
+            color: var(--green);
+            opacity: .3;
+            white-space: pre;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+        }
+
+        #page-accueil {
+            text-align: center;
+            padding-top: 60px;
+        }
+
+        #page-accueil h1 {
+            font-family: var(--font-head);
+            font-size: 3rem;
+            letter-spacing: 8px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        #display-user {
+            color: var(--green);
+            font-weight: 400;
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-family: var(--font-mono);
+        }
+
+        #active-mission-alert {
+            display: none;
+            color: var(--red);
+            font-weight: 700;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            animation: blink 1s infinite;
+        }
+
+
+        /* ── PAGE TITLES ───────────────────────────────────── */
+        .page-title {
+            color: var(--green);
+            font-size: 1.4rem;
+            letter-spacing: 4px;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(76, 175, 80, .3);
+            padding-bottom: 10px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+
+        /* ── PARTICIPATION CARDS ───────────────────────────── */
+        .participation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            text-align: left;
+        }
+
+        .participation-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--muted);
+            padding: 15px;
+            border-radius: 4px;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .participation-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--green);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .participation-card.active {
+            border-left-color: var(--green);
+        }
+
+        .participation-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, transparent 50%, rgba(76, 175, 80, 0.05) 50%);
+        }
+
+        .participation-name {
+            color: var(--green);
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            font-family: var(--font-mono);
+            letter-spacing: 1px;
+        }
+
+        .participation-stats {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .participation-count {
+            font-size: 1.8rem;
+            color: var(--orange);
+            font-weight: 700;
+            font-family: var(--font-mono);
+            line-height: 1;
+        }
+
+        .participation-label {
+            font-size: 0.65rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .participation-last {
+            margin-top: 12px;
+            font-size: 0.68rem;
+            color: var(--muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+        /* ── TOAST ─────────────────────────────────────────── */
+        #toast-container {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            padding: 10px 16px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            border-left: 3px solid;
+            letter-spacing: 1px;
+            animation: slideIn .25s ease;
+            min-width: 220px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .5);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-ok {
+            background: rgba(76, 175, 80, .15);
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .toast-err {
+            background: rgba(244, 67, 54, .15);
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .toast-info {
+            background: rgba(33, 150, 243, .15);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .toast-warn {
+            background: rgba(255, 152, 0, .15);
+            border-color: var(--orange);
+            color: var(--orange);
+        }
+
+
+        /* ── MODAL ─────────────────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .7);
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-box {
+            background: var(--bg4);
+            border: 1px solid var(--border);
+            border-top: 2px solid var(--orange);
+            padding: 24px;
+            border-radius: 6px;
+            width: 320px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .modal-box p {
+            margin-bottom: 20px;
+            color: var(--text);
+            letter-spacing: 1px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+        }
+
+
+        /* ── PRINT ─────────────────────────────────────────── */
+        @media print {
+
+            .navbar,
+            .sidebar,
+            #chat-window,
+            button,
+            .nav-item,
+            #toast-container,
+            .modal-overlay {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .op-card {
+                border: 1px solid black;
+                background: white;
+                color: black;
+            }
+
+            .rapport-key {
+                color: #555;
+            }
+        }
+    </style>
+</head>
+
+<body class="logged-out">
+
+
+    <!-- Toast container -->
+    <div id="toast-container"></div>
+
+
+    <!-- ── AUTH ──────────────────────────────────── -->
+    <div id="auth-section">
+        <div class="auth-logo">▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+            ▓ SGM · SECURE LINK ▓
+            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓</div>
+        <h2>IDENTIFICATION</h2>
+        <input type="text" id="username" class="auth-input" placeholder="NOM DE CODE"
+            onkeydown="if(event.key==='Enter') register()">
+        <input type="password" id="password" class="auth-input" placeholder="CLÉ D'ACCÈS"
+            onkeydown="if(event.key==='Enter') register()">
+        <button onclick="register()" style="margin-top:8px;">ACTIVER LIAISON</button>
+    </div>
+
+
+    <!-- ── DASHBOARD ─────────────────────────────── -->
+    <div id="dashboard">
+        <div id="status-banner">⚠ OPÉRATION EN COURS — DÉPLOIEMENT ACTIF ⚠</div>
+
+
+        <nav class="navbar" id="top-nav">
+            <div class="nav-item active" id="nav-accueil" onclick="showPage('accueil',this)">Accueil</div>
+            <div class="nav-item" id="nav-operation" onclick="showPage('operation',this)">Opération</div>
+            <div class="nav-item" id="nav-rs" onclick="showPage('rs',this)">Fiche RS</div>
+            <div class="nav-item" id="nav-zd" onclick="showPage('zd',this)">Fiche DH</div>
+            <div class="nav-item" id="nav-timer" onclick="showPage('timer',this)">Timers 12h</div>
+            <div class="nav-item" id="nav-rapport" onclick="showPage('rapport',this)">Rapport</div>
+            <div class="nav-item" id="nav-identification" style="display:none;"
+                onclick="showPage('identification',this)">Identification</div>
+
+
+            <div class="alert-controls">
+                <span class="alert-label">ALERTE</span>
+                <button class="alert-btn btn-sm btn-l1" onclick="setAlertLevel(1,'BASSE')">L-1</button>
+                <button class="alert-btn btn-sm btn-l2" onclick="setAlertLevel(2,'MODÉRÉE')">L-2</button>
+                <button class="alert-btn btn-sm btn-l3" onclick="setAlertLevel(3,'CRITIQUE')">L-3</button>
+            </div>
+        </nav>
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="sidebar-title">Unités Connectées</div>
+
+                <ul class="user-list" id="user-list"></ul>
+
+                <button onclick="confirmAction('Réinitialiser la liste des unités ?', clearUsers)"
+                    style="margin-top:auto; font-size:0.6rem;" class="btn-muted">
+                    Réinitialiser liste
+                </button>
+            </aside>
+
+
+            <div class="main-container">
+                <!-- ACCUEIL -->
+                <div id="page-accueil" class="page" style="display:block;">
+                    <div class="home-logo">
+                        ___ ___ ___ ___
+                        / __|| __|| _|| _|
+                        \__ \| _| | |_ | |_
+                        |___/|___|`___'`___'
+                    </div>
+                    <h1>SYSTEM ONLINE</h1>
+                    <div id="display-user"></div>
+                    <div id="active-mission-alert">⚠ UNE OPÉRATION EST ACTUELLEMENT LANCÉE ⚠</div>
+
+                    <div style="margin-top: 40px;">
+                        <button onclick="confirmAction('Voulez-vous vraiment vous déconnecter ?', selfDisconnect)"
+                            class="btn-sm btn-red"
+                            style="padding: 8px 20px; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.2);">
+                            DÉCONNEXION SÉCURISÉE
+                        </button>
+                    </div>
+
+                    <div style="margin-top: 60px; border-top: 1px solid var(--border); padding-top: 30px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                        <h2 style="font-family: var(--font-mono); font-size: 1rem; color: var(--green); letter-spacing: 3px; margin-bottom: 20px; text-transform: uppercase;">
+                            État de Service des Unités
+                        </h2>
+                        <div id="home-participation-summary"></div>
+                    </div>
+                </div>
+
+
+                <!-- OPÉRATION -->
+                <div id="page-operation" class="page">
+                    <h1 class="page-title">Configuration Mission</h1>
+                    <div class="op-card">
+                        <h3>Détails Tactiques</h3>
+                        <label class="field-label">Nom de l'Opération</label>
+                        <input type="text" id="op-name" class="op-input" placeholder="…" oninput="saveMission()">
+
+
+                        <label class="field-label">Coordonnées GPS</label>
+                        <input type="text" id="op-coords" class="op-input" placeholder="48°N 002°E"
+                            oninput="saveMission()">
+
+
+                        <label class="field-label">Objectif Principal</label>
+                        <textarea id="op-obj" class="op-input" rows="2" placeholder="…"
+                            oninput="saveMission()"></textarea>
+
+
+                        <div class="team-box">
+                            <h4>Pax Engagées</h4>
+                            <div id="op-team-list">Aucun personnel inscrit.</div>
+                            <button class="btn-sm btn-blue" onclick="joinOperation()">S'INSCRIRE À LA MISSION</button>
+                        </div>
+
+
+                        <div style="margin-top:16px; display: flex; gap: 10px;">
+                            <button id="btn-launch" onclick="toggleMission()" class="btn-red" style="flex: 2;">LANCER L'OPÉRATION</button>
+                            <button onclick="confirmAction('Réinitialiser tous les champs ?', resetOpSheet)" class="btn-muted" style="flex: 1; font-size: 0.65rem;">RESET FICHE</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- RS -->
+                <div id="page-rs" class="page">
+                    <h1 class="page-title">Renseignement Cible (RS)</h1>
+                    <div class="op-card">
+                        <h3>Nouvelle Fiche Individu</h3>
+                        <div class="two-col">
+                            <div>
+                                <label class="field-label">Nom</label>
+                                <input type="text" id="rs-name" class="rs-input">
+                            </div>
+                            <div>
+                                <label class="field-label">Grade</label>
+                                <select id="rs-danger" class="rs-input">
+                                    <option value="Soldat">Soldat</option>
+                                    <option value="Caporal">Caporal</option>
+                                    <option value="Caporal-chef">Caporal-chef</option>
+                                    <option value="Sergent">Sergent</option>
+                                    <option value="Sergent-chef">Sergent-chef</option>
+                                    <option value="Adjudant">Adjudant</option>
+                                    <option value="Adjudant-chef">Adjudant-chef</option>
+                                    <option value="Lieutenant">Lieutenant</option>
+                                    <option value="Lieutenant-chef">Lieutenant-chef</option>
+                                    <option value="Capitaine">Capitaine</option>
+                                    <option value="Commandant">Commandant</option>
+                                    <option value="Lieutenant-colonel">Lieutenant-colonel</option>
+                                    <option value="Colonel">Colonel</option>
+                                    <option value="Amiral">Amiral</option>
+                                    <option value="Général">Général</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label class="field-label">Infos</label>
+                        <textarea id="rs-desc" class="rs-input" rows="2"></textarea>
+
+
+                        <label class="field-label">Photo (URL)</label>
+                        <input type="text" id="rs-photo" class="rs-input" placeholder="https://…">
+
+
+                        <button onclick="addEntry('rs')" style="margin-top:14px;">ARCHIVER DANS LA BASE RS</button>
+                    </div>
+
+
+                    <div class="history-container">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <h3>Mémoire des Fiches RS</h3>
+                            <input type="text" placeholder="Rechercher un nom..." class="rs-input"
+                                style="width: 200px; padding: 4px 8px; font-size: 0.78rem;"
+                                oninput="loadEntries('rs', this.value)">
+                        </div>
+                        <div id="rs-history-list"></div>
+                        <button onclick="confirmAction('Vider toute la mémoire RS ?', ()=>clearHistory('rs'))"
+                            class="btn-sm btn-muted">Vider la mémoire RS</button>
+                    </div>
+                </div>
+
+
+                <!-- DH -->
+                <div id="page-zd" class="page">
+                    <h1 class="page-title">Renseignement Cible (DH)</h1>
+                    <div class="op-card">
+                        <h3>Nouvelle Fiche Individu</h3>
+                        <div class="two-col">
+                            <div>
+                                <label class="field-label">Nom </label>
+                                <input type="text" id="zd-name" class="zd-input">
+                            </div>
+                            <div>
+                                <label class="field-label">Grade</label>
+                                <select id="zd-danger" class="zd-input">
+                                    <option value="Soldat">Soldat</option>
+                                    <option value="Soldat 1cl">Soldat 1cl</option>
+                                    <option value="Caporal">Caporal</option>
+                                    <option value="Caporal-chef">Caporal-chef</option>
+                                    <option value="Sergent">Sergent</option>
+                                    <option value="Sergent-chef">Sergent-chef</option>
+                                    <option value="Sergent-chef BM2">Sergent-chef BM2</option>
+                                    <option value="Adjudant">Adjudant</option>
+                                    <option value="Adjudant-chef">Adjudant-chef</option>
+                                    <option value="Major">Major</option>
+                                    <option value="Aspirant">Aspirant</option>
+                                    <option value="Sous-lieutenant">Sous-lieutenant</option>
+                                    <option value="Lieutenant">Lieutenant</option>
+                                    <option value="Capitaine">Capitaine</option>
+                                    <option value="Commandant">Commandant</option>
+                                    <option value="Lieutenant-colonel">Lieutenant-colonel</option>
+                                    <option value="Colonel">Colonel</option>
+                                    <option value="Général de brigade">Général de brigade</option>
+                                    <option value="Général de division">Général de division</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label class="field-label">Infos</label>
+                        <textarea id="zd-desc" class="zd-input" rows="2"></textarea>
+
+
+                        <label class="field-label">Photo DH (URL)</label>
+                        <input type="text" id="zd-photo" class="zd-input" placeholder="https://…">
+
+
+                        <button onclick="addEntry('zd')" style="margin-top:14px;">ARCHIVER DANS LA BASE DH</button>
+                    </div>
+
+
+                    <div class="history-container">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <h3>Mémoire des Fiches DH</h3>
+                            <input type="text" placeholder="Rechercher un nom..." class="zd-input"
+                                style="width: 200px; padding: 4px 8px; font-size: 0.78rem;"
+                                oninput="loadEntries('zd', this.value)">
+                        </div>
+                        <div id="zd-history-list"></div>
+                        <button onclick="confirmAction('Vider toute la mémoire DH ?', ()=>clearHistory('zd'))"
+                            class="btn-sm btn-muted">Vider la mémoire DH</button>
+                    </div>
+                </div>
+
+
+                <!-- TIMER -->
+                <div id="page-timer" class="page" style="text-align:center;">
+                    <h1 class="page-title">Comptes à rebours tactiques (12H)</h1>
+                    <div class="timer-grid" style="max-width:760px; margin:20px auto 0;">
+                        <div class="timer-panel">
+                            <h3>Décomptes RS</h3>
+                            <div id="rs-timer-list"></div>
+                        </div>
+                        <div class="timer-panel">
+                            <h3>Décomptes DH</h3>
+                            <div id="zd-timer-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- RAPPORT -->
+                <div id="page-rapport" class="page">
+                    <h1 class="page-title">Rapport de Mission Finale</h1>
+                    <div class="op-card" id="rapport-content">
+                        <div id="rapport-vide" style="text-align:center; padding:20px;">
+                            <p style="color:var(--muted); font-family:var(--font-mono); font-size:0.85rem;">
+                                ⚠ AUCUNE DONNÉE — Lancez et terminez une opération.
+                            </p>
+                        </div>
+                        <div id="rapport-details" style="display:none;">
+                            <h2
+                                style="font-size:1rem; letter-spacing:3px; margin-bottom:16px; color:var(--green); font-family:var(--font-mono);">
+                                SYNTHÈSE TACTIQUE
+                            </h2>
+                            <div id="rapport-data"></div>
+
+                            <div style="margin-top:20px;">
+                                <label class="field-label" style="color:var(--orange);">Observations
+                                    Complémentaires</label>
+                                <textarea id="rapport-notes" class="op-input" rows="5"
+                                    placeholder="Approfondir le rapport ici (déroulement, incidents, points clés...)"
+                                    oninput="saveRapportNotes()"></textarea>
+                            </div>
+
+                            <div style="margin-top:20px; display: flex; gap: 10px;">
+                                <button onclick="archiveRapport()" class="btn-sm btn-orange" style="padding:8px 20px;">
+                                    ARCHIVER LE RAPPORT
+                                </button>
+                                <button onclick="window.print()" class="btn-sm btn-blue" style="padding:8px 20px;">
+                                    EXPORTER / IMPRIMER PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="history-container" style="margin-top: 30px;">
+                        <h3>Statistiques de Participation</h3>
+                        <div id="participation-summary" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 25px;"></div>
+
+                        <h3>Archives des Missions Précédentes</h3>
+                        <div id="rapport-history-list"></div>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button onclick="confirmAction('Vider toutes les archives de rapports ?', clearRapportHistory)"
+                                class="btn-sm btn-muted">Vider toutes les archives</button>
+                            <button onclick="confirmAction('Remettre à zéro les compteurs de participation ? (L\'historique sera conservé)', resetParticipationStats)"
+                                class="btn-sm btn-red">Réinitialiser les Compteurs</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- IDENTIFICATION / GESTION COMPTES -->
+                <div id="page-identification" class="page">
+                    <h1 class="page-title">Gestion des Accès Sécurisés</h1>
+                    <div class="op-card">
+                        <h3>Enregistrer un nouvel Opérateur</h3>
+                        <div class="two-col">
+                            <div>
+                                <label class="field-label">Identifiant (Nom de code)</label>
+                                <input type="text" id="new-account-user" class="op-input" placeholder="ALPHA-1">
+                            </div>
+                            <div>
+                                <label class="field-label">Mot de passe (Clé d'accès)</label>
+                                <input type="password" id="new-account-pass" class="op-input" placeholder="••••••••">
+                            </div>
+                        </div>
+                        <button onclick="addAccount()" style="margin-top:14px;" class="btn-blue">CRÉER LE COMPTE
+                            D'ACCÈS</button>
+                    </div>
+
+                    <div class="op-card" style="margin-top:10px; border-top-color: var(--blue);">
+                        <h3>Droits d'Accès (Catégories)</h3>
+                        <div
+                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.8rem; font-family: var(--font-mono);">
+                            <label><input type="checkbox" class="perm-check" value="accueil" checked disabled> ACCUEIL
+                                (Obligatoire)</label>
+                            <label><input type="checkbox" class="perm-check" value="operation"> OPÉRATION</label>
+                            <label><input type="checkbox" class="perm-check" value="rs"> FICHE RS</label>
+                            <label><input type="checkbox" class="perm-check" value="zd"> FICHE DH</label>
+                            <label><input type="checkbox" class="perm-check" value="timer"> TIMERS 12H</label>
+                            <label><input type="checkbox" class="perm-check" value="rapport"> RAPPORT</label>
+                        </div>
+                        <h3 style="margin-top:15px; border-top: 1px solid var(--border); padding-top:10px;">Privilèges
+                            d'Action</h3>
+                        <div
+                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.8rem; font-family: var(--font-mono);">
+                            <label style="color:var(--orange);"><input type="checkbox" class="perm-check"
+                                    value="alert_manage"> GÉRER ALERTES</label>
+                            <label style="color:var(--red);"><input type="checkbox" class="perm-check"
+                                    value="delete_entries"> SUPPRIMER FICHES</label>
+                            <label style="color:var(--red);"><input type="checkbox" class="perm-check"
+                                    value="delete_reports"> SUPPRIMER RAPPORTS</label>
+                            <label style="color:var(--orange);"><input type="checkbox" class="perm-check"
+                                    value="reset_list"> RÉINITIALISER LISTE</label>
+                            <label style="color:var(--red);"><input type="checkbox" class="perm-check"
+                                    value="reset_participation"> RÉINITIALISER STATS</label>
+                        </div>
+                    </div>
+
+                    <div class="history-container">
+                        <h3>Personnel Autorisé</h3>
+                        <div id="accounts-list"></div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div><!-- /main-container -->
+    </div><!-- /main-layout -->
+
+
+    <!-- CHAT -->
+    <div id="chat-window" style="display:none;">
+        <div id="chat-header">▶ SECURE CHANNEL</div>
+        <div id="messages"></div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Transmission…"
+                onkeydown="if(event.key==='Enter') sendMessage()">
+            <button class="chat-send-btn" onclick="sendMessage()">▶</button>
+        </div>
+    </div>
+
+    <button id="btn-toggle-chat" onclick="toggleChat()"
+        style="position: fixed; bottom: 20px; right: 20px; width: auto; z-index: 1001; font-size: 0.7rem; padding: 5px 12px;"
+        class="alert-btn btn-sm btn-blue">CANAL : ON</button>
+    </div>
+    </div>
+
+
+    <!-- Initialisation Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDoTBDj9yXk7nx2megfPVS4GGOni8RI6wo",
+            authDomain: "special-warfare-i-zdops.firebaseapp.com",
+            databaseURL: "https://special-warfare-i-zdops-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "special-warfare-i-zdops",
+            storageBucket: "special-warfare-i-zdops.firebasestorage.app",
+            messagingSenderId: "630945412409",
+            appId: "1:630945412409:web:435d82f2daec40389364e8",
+            measurementId: "G-DN0XKH9K20"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        
+        console.log("SGM : Liaison Firebase établie.");
+    </script>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════
+        //  UTILITAIRES
+        // ═══════════════════════════════════════════════════════════
+
+
+        /** Échappe le HTML pour éviter les injections XSS */
+        function esc(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+
+        /** Heure courante formatée HH:MM */
+        function nowTime() {
+            return new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        }
+
+
+        // ── Toast notifications ──────────────────────────────────
+        function toast(msg, type = 'ok', duration = 3000) {
+            const el = document.createElement('div');
+            el.className = `toast toast-${type}`;
+            el.textContent = msg;
+            const c = document.getElementById('toast-container');
+            c.appendChild(el);
+            setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 300); }, duration);
+        }
+
+
+        // ── Modal de confirmation ────────────────────────────────
+        function confirmAction(msg, callback) {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            overlay.innerHTML = `
+            <div class="modal-box">
+                <p>${esc(msg)}</p>
+                <div class="modal-actions">
+                    <button class="btn-muted" id="modal-no">ANNULER</button>
+                    <button class="btn-red"   id="modal-yes">CONFIRMER</button>
+                </div>
+            </div>`;
+            document.body.appendChild(overlay);
+            overlay.querySelector('#modal-no').onclick = () => overlay.remove();
+            overlay.querySelector('#modal-yes').onclick = () => { overlay.remove(); callback(); };
+        }
+
+
+        // ── Badge dangerosité ────────────────────────────────────
+        function dangerBadge(val) {
+            const n = parseInt(val) || 0;
+            const cls = n >= 8 ? 'danger-high' : n >= 5 ? 'danger-medium' : 'danger-low';
+            return `<span class="danger-badge ${cls}">${esc(val) || '?'}/10</span>`;
+        }
+
+
+        // ═══════════════════════════════════════════════════════════
+        //  ÉTAT
+        // ═══════════════════════════════════════════════════════════
+        let missionActive = false;
+        let currentTeam = [];
+        let chatVisible = true;
+
+
+        window.onload = function () {
+            initAccounts();
+            updateUserList();
+            loadMission();
+            loadEntries('rs');
+            loadEntries('zd');
+            loadRapportHistory();
+            loadAccounts();
+            setInterval(updateAllTimers, 1000);
+        };
+
+
+        // ═══════════════════════════════════════════════════════════
+        //  AUTH
+        // ═══════════════════════════════════════════════════════════
+        // ── Comptes (Nouveauté V4.0) ────────────────────────────
+        function initAccounts() {
+            let accounts = JSON.parse(localStorage.getItem('military_accounts')) || [];
+            // Garantir que ADMIN existe toujours comme accès maître
+            if (!accounts.find(a => a.user === 'ADMIN')) {
+                accounts.push({
+                    user: 'ADMIN',
+                    pass: 'SW59',
+                    perms: ['accueil', 'operation', 'rs', 'zd', 'timer', 'rapport', 'identification', 'alert_manage', 'delete_entries', 'delete_reports', 'reset_list', 'reset_participation']
+                });
+                localStorage.setItem('military_accounts', JSON.stringify(accounts));
+            }
+        }
+
+        function register() {
+            const userField = document.getElementById('username');
+            const passField = document.getElementById('password');
+            const user = userField.value.trim().toUpperCase();
+            const pass = passField.value.trim();
+
+            if (!user || !pass) {
+                toast('Identifiant et mot de passe requis.', 'err');
+                return;
+            }
+
+            let accounts = JSON.parse(localStorage.getItem('military_accounts')) || [];
+            const account = accounts.find(a => a.user.toUpperCase() === user && a.pass === pass);
+
+            if (!account) {
+                toast('ÉCHEC DE LIAISON : Identifiants invalides.', 'err');
+                return;
+            }
+
+            // Marquer comme connecté dans la liste des unités actives
+            let activeUsers = JSON.parse(localStorage.getItem('military_users')) || [];
+            if (!activeUsers.includes(user)) {
+                activeUsers.push(user);
+                localStorage.setItem('military_users', JSON.stringify(activeUsers));
+            }
+
+            const stats = getParticipationStats();
+            const count = stats[user] ? stats[user].count : 0;
+            document.getElementById('display-user').textContent = `OPÉRATEUR : ${user} [${count} MISSION${count > 1 ? 'S' : ''}]`;
+
+            // Appliquer les permissions de navigation
+            const allPerms = ['accueil', 'operation', 'rs', 'zd', 'timer', 'rapport', 'identification'];
+            // Si aucune permission n'est définie (ancien compte), on donne accès à tout sauf l'identification
+            const defaultPerms = ['accueil', 'operation', 'rs', 'zd', 'timer', 'rapport'];
+            const userPerms = account.perms || defaultPerms;
+
+            allPerms.forEach(p => {
+                const el = document.getElementById('nav-' + p);
+                if (el) {
+                    // ADMIN voit tout, les autres voient selon leurs perms
+                    el.style.display = (user === 'ADMIN' || userPerms.includes(p)) ? 'block' : 'none';
+                }
+            });
+
+            updateUserList();
+            document.body.className = 'logged-in';
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'flex';
+            toast(`Liaison établie. Bienvenue, ${user}.`, 'ok');
+        }
+
+        function addAccount() {
+            const user = document.getElementById('new-account-user').value.trim().toUpperCase();
+            const pass = document.getElementById('new-account-pass').value.trim();
+
+            if (!user || !pass) {
+                toast('Tous les champs sont requis.', 'err');
+                return;
+            }
+
+            let accounts = JSON.parse(localStorage.getItem('military_accounts')) || [];
+            if (accounts.find(a => a.user === user)) {
+                toast('Cet identifiant est déjà utilisé.', 'err');
+                return;
+            }
+
+            // Récupérer les permissions cochées
+            const perms = Array.from(document.querySelectorAll('.perm-check:checked')).map(cb => cb.value);
+            if (!perms.includes('accueil')) perms.push('accueil');
+
+            accounts.push({ user, pass, perms });
+            localStorage.setItem('military_accounts', JSON.stringify(accounts));
+
+            document.getElementById('new-account-user').value = '';
+            document.getElementById('new-account-pass').value = '';
+            document.querySelectorAll('.perm-check').forEach(cb => { if (!cb.disabled) cb.checked = false; });
+
+            loadAccounts();
+            toast(`Compte pour ${user} créé avec succès.`, 'ok');
+        }
+
+        function loadAccounts() {
+            const list = document.getElementById('accounts-list');
+            if (!list) return;
+            const accounts = JSON.parse(localStorage.getItem('military_accounts')) || [];
+
+            list.innerHTML = accounts.map((a, idx) => `
+            <div class="entry-card" style="border-left-color: var(--blue); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <span class="entry-name">${esc(a.user)}</span>
+                    <div style="color: var(--muted); font-size: 0.65rem; margin-top: 4px; font-family: var(--font-mono);">
+                        ACCÈS : ${(a.perms || ['accueil']).join(', ').toUpperCase()}
+                    </div>
+                </div>
+                ${a.user !== 'ADMIN' ? `
+                    <button class="btn-sm btn-red" style="width: auto;" onclick="confirmAction('Supprimer ce compte ?', () => deleteAccount(${idx}))">SUPPRIMER</button>
+                ` : '<span style="font-size: 0.6rem; color: var(--orange);">ROOT</span>'}
+            </div>
+        `).join('');
+        }
+
+        function deleteAccount(idx) {
+            let accounts = JSON.parse(localStorage.getItem('military_accounts')) || [];
+            const userToDelete = accounts[idx].user;
+
+            accounts.splice(idx, 1);
+            localStorage.setItem('military_accounts', JSON.stringify(accounts));
+
+            // Si l'utilisateur est dans la liste active, on peut le laisser ou non, ici on rafraîchit juste
+            loadAccounts();
+            toast(`Compte ${userToDelete} supprimé.`, 'info');
+        }
+
+        function selfDisconnect() {
+            const user = currentUser();
+
+            // Retirer l'utilisateur de la liste globale
+            let users = JSON.parse(localStorage.getItem('military_users')) || [];
+            users = users.filter(u => u !== user);
+            localStorage.setItem('military_users', JSON.stringify(users));
+            updateUserList();
+
+            document.body.className = 'logged-out';
+            document.getElementById('auth-section').style.display = 'flex';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            toast('Déconnexion réussie.', 'ok');
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        //  NAVIGATION
+        // ═══════════════════════════════════════════════════════════
+        function showPage(pageId, navEl) {
+            // Vérification des permissions
+            const accounts = JSON.parse(localStorage.getItem('military_accounts')) || [];
+            const user = currentUser();
+            const account = accounts.find(a => a.user === user);
+
+            if (user !== 'ADMIN') {
+                const defaultPerms = ['accueil', 'operation', 'rs', 'zd', 'timer', 'rapport'];
+                const userPerms = (account && account.perms) ? account.perms : defaultPerms;
+                if (!userPerms.includes(pageId)) {
+                    toast('ACCÈS REFUSÉ : Privilèges insuffisants.', 'err');
+                    return;
+                }
+            }
+
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById('page-' + pageId).style.display = 'block';
+
+
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (navEl) navEl.classList.add('active');
+
+
+            if (pageId === 'rapport') updateRapport();
+            if (pageId === 'timer') updateAllTimers();
+            if (pageId === 'accueil') updateParticipationSummary();
+            if (pageId === 'operation') loadMission();
+
+            const onAccueil = (pageId === 'accueil');
+            document.getElementById('chat-window').style.display = (onAccueil && chatVisible) ? 'flex' : 'none';
+            document.querySelector('.sidebar').style.display = onAccueil ? 'flex' : 'none';
+        }
+
+        function toggleChat() {
+            chatVisible = !chatVisible;
+            const btn = document.getElementById('btn-toggle-chat');
+            btn.textContent = chatVisible ? 'CANAL : ON' : 'CANAL : OFF';
+            btn.className = chatVisible ? 'alert-btn btn-sm btn-blue' : 'alert-btn btn-sm btn-muted';
+
+            // Ajuster la position du bouton si le chat est ouvert
+            btn.style.bottom = chatVisible ? '290px' : '20px';
+
+            // Appliquer immédiatement si sur l'accueil
+            const onAccueil = (document.getElementById('page-accueil').style.display === 'block');
+            document.getElementById('chat-window').style.display = (onAccueil && chatVisible) ? 'flex' : 'none';
+
+            toast(chatVisible ? 'Canal de communication activé.' : 'Canal de communication désactivé.', chatVisible ? 'info' : 'warn');
+        }
+
+
+        // ═══════════════════════════════════════════════════════════
+        //  ALERTE
+        // ═══════════════════════════════════════════════════════════
+        function setAlertLevel(level, label) {
+            if (!hasPerm('alert_manage')) return;
+            const colorMap = { 1: 'var(--green)', 2: 'var(--orange)', 3: 'var(--red)' };
+            const color = colorMap[level] || 'var(--green)';
+            document.getElementById('top-nav').style.borderBottomColor = color;
+            chatSystem(`[ALERT] Niveau ${esc(label)} activé par ${esc(currentUser())}.`, color);
+            toast(`Alerte ${label} activée.`, level === 3 ? 'err' : level === 2 ? 'warn' : 'ok');
+        }
+
+
+        // ═══════════════════════════════════════════════════════════
+        //  MISSION
+        // ═══════════════════════════════════════════════════════════
+        function toggleMission() {
+            // Recharger l'état réel pour éviter les désynchronisations
+            const saved = JSON.parse(localStorage.getItem('current_mission')) || {};
+            missionActive = saved.isActive || false;
+            if (missionActive) {
+                currentTeam = saved.team || [];
+            }
+
+            const opName = document.getElementById('op-name').value;
+            if (!opName && !missionActive) { toast('Nom d\'opération requis.', 'err'); return; }
+
+
+            missionActive = !missionActive;
+            const user = currentUser();
+
+
+            if (!missionActive) {
+                chatSystem(`${esc(user)} A TERMINÉ L'OPÉRATION. Unités démobilisées.`, 'var(--orange)');
+                
+                // Sauvegarder les données pour le rapport avant de réinitialiser
+                const reportData = {
+                    name: document.getElementById('op-name').value,
+                    coords: document.getElementById('op-coords').value,
+                    obj: document.getElementById('op-obj').value,
+                    team: [...currentTeam]
+                };
+                localStorage.setItem('pending_report_data', JSON.stringify(reportData));
+
+                // Remise à zéro automatique de la fiche (UI)
+                resetOpSheet(false); 
+            } else {
+                localStorage.removeItem('pending_report_data');
+                localStorage.removeItem('rapport_notes');
+                chatSystem(`${esc(user)} A LANCÉ L'OPÉRATION : ${esc(opName)}`, 'var(--red)');
+            }
+            updateUIMissionState();
+            saveMission();
+        }
+
+
+        function updateUIMissionState() {
+            document.getElementById('status-banner').style.display = missionActive ? 'block' : 'none';
+            document.getElementById('active-mission-alert').style.display = missionActive ? 'block' : 'none';
+            
+            const btn = document.getElementById('btn-launch');
+            btn.textContent = missionActive ? 'TERMINER L\'OPÉRATION' : 'LANCER L\'OPÉRATION';
+            btn.className = missionActive ? 'btn-muted' : 'btn-red';
+
+            // Verrouiller les champs si une mission est active
+            const inputs = ['op-name', 'op-coords', 'op-obj'];
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.disabled = missionActive;
+            });
+        }
+
+
+        function saveMission() {
+            localStorage.setItem('current_mission', JSON.stringify({
+                name: document.getElementById('op-name').value,
+                coords: document.getElementById('op-coords').value,
+                obj: document.getElementById('op-obj').value,
+                team: currentTeam,
+                isActive: missionActive
+            }));
+        }
+
+
+        function loadMission() {
+            const saved = JSON.parse(localStorage.getItem('current_mission'));
+            if (!saved) {
+                missionActive = false;
+                currentTeam = [];
+                updateUIMissionState();
+                updateTeamUI();
+                return;
+            }
+            document.getElementById('op-name').value = saved.name || '';
+            document.getElementById('op-coords').value = saved.coords || '';
+            document.getElementById('op-obj').value = saved.obj || '';
+            currentTeam = saved.team || [];
+            missionActive = saved.isActive || false;
+            updateUIMissionState();
+            updateTeamUI();
+        }
+
+
+        function joinOperation() {
+            const user = currentUser();
+            // Charger l'état actuel pour ne pas écraser les inscriptions des autres
+            const saved = JSON.parse(localStorage.getItem('current_mission')) || {};
+            currentTeam = saved.team || [];
+            missionActive = saved.isActive || false;
+
+            if (currentTeam.includes(user)) { toast('Déjà inscrit à la mission.', 'warn'); return; }
+            currentTeam.push(user);
+            updateTeamUI();
+            saveMission();
+            chatSystem(`${esc(user)} a rejoint la mission.`, 'var(--blue)');
+            toast('Inscription enregistrée.', 'ok');
+        }
+
+
+        function updateTeamUI() {
+            const list = document.getElementById('op-team-list');
+            list.innerHTML = currentTeam.length === 0
+                ? 'Aucun personnel inscrit.'
+                : currentTeam.map(u => `▸ ${esc(u)}`).join('<br>');
+        }
+
+        function resetOpSheet(showToast = true) {
+            document.getElementById('op-name').value = '';
+            document.getElementById('op-coords').value = '';
+            document.getElementById('op-obj').value = '';
+            currentTeam = [];
+            updateTeamUI();
+            saveMission();
+            if (showToast) toast('Fiche d\'opération réinitialisée.', 'info');
+        }
+
+
+        // ═══════════════════════════════════════════════════════════
+        //  FICHES RS / ZD  (fonctions génériques)
+        // ═══════════════════════════════════════════════════════════
+        function addEntry(type) {
+            const nameEl = document.getElementById(`${type}-name`);
+            const name = nameEl.value.trim();
+            if (!name) { toast('Le nom est requis.', 'err'); return; }
+
+
+            const oldTime = nameEl.dataset.originalTimestamp;
+            const editIndex = nameEl.dataset.editIndex;
+            const finalTimestamp = oldTime ? parseInt(oldTime) : Date.now();
+
+
+            const entry = {
+                name,
+                danger: document.getElementById(`${type}-danger`).value,
+                desc: document.getElementById(`${type}-desc`).value,
+                photo: document.getElementById(`${type}-photo`).value,
+                timestamp: finalTimestamp,
+                date: new Date(finalTimestamp).toLocaleString('fr-FR')
+            };
+
+
+            const key = `${type}_history`;
+            const history = JSON.parse(localStorage.getItem(key)) || [];
+
+            if (editIndex !== undefined) {
+                // Remplace en place pour ne pas perdre la position dans le tableau
+                history[parseInt(editIndex)] = entry;
+            } else {
+                history.unshift(entry);
+            }
+            localStorage.setItem(key, JSON.stringify(history));
+
+
+            // Reset form
+            document.querySelectorAll(`.${type}-input`).forEach(i => i.value = '');
+            delete nameEl.dataset.originalTimestamp;
+            delete nameEl.dataset.editIndex;
+
+
+            loadEntries(type);
+            toast(`Fiche ${type.toUpperCase()} archivée.`, 'ok');
+        }
+
+
+        function cancelEdit(type) {
+            const nameEl = document.getElementById(`${type}-name`);
+            document.querySelectorAll(`.${type}-input`).forEach(i => i.value = '');
+            delete nameEl.dataset.originalTimestamp;
+            delete nameEl.dataset.editIndex;
+            loadEntries(type);
+            toast('Édition annulée.', 'info');
+        }
+
+
+        function loadEntries(type, filter = '') {
+            const list = document.getElementById(`${type}-history-list`);
+            const history = JSON.parse(localStorage.getItem(`${type}_history`)) || [];
+            const label = type === 'rs' ? 'CIBLE' : 'ZONE';
+            const nameEl = document.getElementById(`${type}-name`);
+            const isEditing = nameEl.dataset.editIndex !== undefined;
+
+
+            const filtered = filter
+                ? history.map((item, index) => ({ ...item, originalIndex: index })).filter(item => item.name.toLowerCase().includes(filter.toLowerCase()))
+                : history.map((item, index) => ({ ...item, originalIndex: index }));
+
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<p style="color:var(--muted); font-family:var(--font-mono); font-size:0.8rem;">${filter ? 'Aucune fiche trouvée.' : 'Aucune fiche.'}</p>`;
+                return;
+            }
+
+
+            list.innerHTML = filtered.map((item) => {
+                const isThisEditing = isEditing && nameEl.dataset.editIndex == item.originalIndex;
+                return `
+                <div class="entry-card" style="${isThisEditing ? 'border-color: var(--orange); background: rgba(255,152,0,0.05);' : ''}">
+                    <div class="entry-header">
+                        <span class="entry-name">${esc(label)} : ${esc(item.name)} ${isThisEditing ? '<span style="color:var(--orange); font-size:0.6rem;">(EN COURS)</span>' : ''}</span>
+                        <div style="display: flex; gap: 5px;">
+                            ${isThisEditing
+                        ? `<button class="btn-sm btn-orange" onclick="cancelEdit('${type}')">ANNULER</button>`
+                        : `<button class="btn-sm btn-blue" onclick="editEntry('${type}', ${item.originalIndex})">MODIFIER</button>`
+                    }
+                            <button class="btn-sm btn-red" onclick="confirmAction('Supprimer cette fiche ?', () => deleteSingleEntry('${type}', ${item.originalIndex}))">SUPPRIMER</button>
+                        </div>
+                    </div>
+                    <div class="entry-body">
+                        ${item.photo ? `<img src="${esc(item.photo)}" class="entry-photo" onerror="this.style.display='none'" alt="">` : ''}
+                        <div>
+                            <div>Dangerosité : ${dangerBadge(item.danger)}</div>
+                            <div class="entry-desc">"${esc(item.desc) || '…'}"</div>
+                            <div style="color:var(--muted); font-size:0.75rem; margin-top:6px; font-family:var(--font-mono);">${esc(item.date)}</div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+
+        function editEntry(type, index) {
+            const key = `${type}_history`;
+            const history = JSON.parse(localStorage.getItem(key)) || [];
+            const item = history[index];
+            if (!item) return;
+
+
+            const nameEl = document.getElementById(`${type}-name`);
+            nameEl.value = item.name;
+            document.getElementById(`${type}-danger`).value = item.danger;
+            document.getElementById(`${type}-desc`).value = item.desc;
+            document.getElementById(`${type}-photo`).value = item.photo || '';
+            nameEl.dataset.originalTimestamp = item.timestamp;
+            nameEl.dataset.editIndex = index;  // conserve la position — le timer ne bouge pas
+
+
+            // On ne supprime PAS l'entrée du localStorage pendant l'édition
+            // Elle sera remplacée en place par addEntry() → le timer continue de tourner
+            loadEntries(type);
+            toast('Données remontées — timer d\'origine conservé.', 'info');
+            document.querySelector('.main-container').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+        function clearHistory(type) {
+            if (!hasPerm('delete_entries')) return;
+            localStorage.removeItem(`${type}_history`);
+            loadEntries(type);
+            toast(`Historique ${type.toUpperCase()} vidé.`, 'warn');
+        }
+
+        function deleteSingleEntry(type, index) {
+            if (!hasPerm('delete_entries')) return;
+            const nameEl = document.getElementById(`${type}-name`);
+            // Si on supprime la fiche en cours d'édition, on annule l'édition
+            if (nameEl && nameEl.dataset.editIndex == index) {
+                cancelEdit(type);
+            }
+
+            const key = `${type}_history`;
+            let history = JSON.parse(localStorage.getItem(key)) || [];
+            history.splice(index, 1);
+            localStorage.setItem(key, JSON.stringify(history));
+            loadEntries(type);
+            toast(`Fiche supprimée.`, 'info');
+        }
+
+
+        // ═══════════════════════════════════════════════════════════
+        //  TIMERS
+        // ═══════════════════════════════════════════════════════════
+        function updateAllTimers() {
+            const now = Date.now();
+            const LIMIT = 12 * 60 * 60 * 1000;
+
+
+            ['rs', 'zd'].forEach(type => {
+                const list = document.getElementById(`${type}-timer-list`);
+                if (!list) return;
+                const history = JSON.parse(localStorage.getItem(`${type}_history`)) || [];
+
+
+                list.innerHTML = history.length === 0
+                    ? '<p style="color:var(--muted); font-family:var(--font-mono); font-size:0.8rem;">Aucun décompte.</p>'
+                    : history.map(item => {
+                        const left = (item.timestamp + LIMIT) - now;
+                        let text = 'EXPIRÉ', cls = 'expired';
+                        if (left > 0) {
+                            const h = Math.floor(left / 3600000);
+                            const m = Math.floor((left % 3600000) / 60000);
+                            const s = Math.floor((left % 60000) / 1000);
+                            text = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+                            cls = '';
+                        }
+                        return `<div class="timer-entry">
+                        <b>${esc(item.name)}</b>
+                        <br><span class="countdown ${cls}">${text}</span>
+                    </div>`;
+                    }).join('');
+            });
+        }
+
+
+        // ═══════════════════════════════════════════════════════════
+        //  RAPPORT
+        // ═══════════════════════════════════════════════════════════
+        function updateRapport() {
+            const saved = JSON.parse(localStorage.getItem('pending_report_data'));
+            if (saved && saved.name) {
+                document.getElementById('rapport-vide').style.display = 'none';
+                document.getElementById('rapport-details').style.display = 'block';
+
+
+                const rsCount = (JSON.parse(localStorage.getItem('rs_history')) || []).length;
+                const zdCount = (JSON.parse(localStorage.getItem('zd_history')) || []).length;
+
+
+                document.getElementById('rapport-data').innerHTML = [
+                    ['Opération', esc(saved.name)],
+                    ['Coordonnées GPS', esc(saved.coords) || 'N/A'],
+                    ['Objectif', esc(saved.obj) || 'N/A'],
+                    ['Statut', '<span style="color:var(--green)">MISSION ACCOMPLIE</span>'],
+                    ['Unités engagées', (saved.team && saved.team.length) ? saved.team.map(esc).join(', ') : 'Démobilisées'],
+                    ['Fiches RS archivées', `${rsCount}`],
+                    ['Fiches ZD archivées', `${zdCount}`],
+                ].map(([k, v]) => `<div class="rapport-row"><span class="rapport-key">${k}</span><span class="rapport-val">${v}</span></div>`).join('');
+
+                // Charger les notes
+                document.getElementById('rapport-notes').value = localStorage.getItem('rapport_notes') || '';
+            } else {
+                document.getElementById('rapport-vide').style.display = 'block';
+                document.getElementById('rapport-details').style.display = 'none';
+            }
+        }
+
+        function saveRapportNotes() {
+            const notes = document.getElementById('rapport-notes').value;
+            localStorage.setItem('rapport_notes', notes);
+        }
+
+        function archiveRapport() {
+            const saved = JSON.parse(localStorage.getItem('pending_report_data'));
+            if (!saved || !saved.name) return;
+
+            const rsCount = (JSON.parse(localStorage.getItem('rs_history')) || []).length;
+            const zdCount = (JSON.parse(localStorage.getItem('zd_history')) || []).length;
+            const notes = localStorage.getItem('rapport_notes') || '';
+
+            const rapport = {
+                id: Date.now(),
+                name: saved.name,
+                date: new Date().toLocaleString('fr-FR'),
+                coords: saved.coords || 'N/A',
+                obj: saved.obj || 'N/A',
+                team: saved.team || [],
+                rsCount,
+                zdCount,
+                notes
+            };
+
+            let history = JSON.parse(localStorage.getItem('rapport_history')) || [];
+            history.unshift(rapport);
+            localStorage.setItem('rapport_history', JSON.stringify(history));
+
+            localStorage.removeItem('pending_report_data');
+            localStorage.removeItem('rapport_notes');
+            updateRapport();
+
+            loadRapportHistory();
+            updateParticipationSummary();
+            toast('Rapport archivé avec succès.', 'ok');
+        }
+
+        function loadRapportHistory() {
+            updateParticipationSummary();
+            const list = document.getElementById('rapport-history-list');
+            if (!list) return;
+            const history = JSON.parse(localStorage.getItem('rapport_history')) || [];
+
+            list.innerHTML = history.length === 0
+                ? '<p style="color:var(--muted); font-family:var(--font-mono); font-size:0.8rem;">Aucune archive disponible.</p>'
+                : history.map((r, idx) => `
+                <div class="entry-card" style="border-left-color: var(--blue);">
+                    <div class="entry-header">
+                        <span class="entry-name">OP : ${esc(r.name)}</span>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn-sm btn-blue" onclick="editRapport(${idx})">MODIFIER</button>
+                            <button class="btn-sm btn-red" onclick="confirmAction('Supprimer ce rapport ?', () => deleteRapport(${idx}))">SUPPRIMER</button>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; font-family: var(--font-mono);">${esc(r.date)}</div>
+                    <div style="font-size: 0.85rem; line-height: 1.4;">
+                        <div><b>Objectif :</b> ${esc(r.obj)}</div>
+                        <div><b>Effectifs :</b> ${r.team.join(', ') || 'N/A'}</div>
+                        <div style="color: var(--green); margin-top: 4px;">Fiches : ${r.rsCount} RS / ${r.zdCount} DH</div>
+                        ${r.notes ? `<div class="entry-desc" style="margin-top:8px; border-top: 1px solid var(--border); padding-top:4px;">"${esc(r.notes)}"</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editRapport(idx) {
+            let history = JSON.parse(localStorage.getItem('rapport_history')) || [];
+            const r = history[idx];
+            if (!r) return;
+
+            const newNotes = prompt("Modifier les observations du rapport :", r.notes);
+            if (newNotes !== null) {
+                history[idx].notes = newNotes;
+                localStorage.setItem('rapport_history', JSON.stringify(history));
+                loadRapportHistory();
+                toast('Archive mise à jour.', 'ok');
+            }
+        }
+
+        function deleteRapport(idx) {
+            if (!hasPerm('delete_reports')) return;
+            let history = JSON.parse(localStorage.getItem('rapport_history')) || [];
+            history.splice(idx, 1);
+            localStorage.setItem('rapport_history', JSON.stringify(history));
+            loadRapportHistory();
+            toast('Rapport supprimé de l\'archive.', 'info');
+        }
+
+        function clearRapportHistory() {
+            if (!hasPerm('delete_reports')) return;
+            localStorage.removeItem('rapport_history');
+            localStorage.removeItem('stats_reset_timestamp');
+            loadRapportHistory();
+            updateParticipationSummary();
+            toast('Toutes les archives ont été supprimées.', 'warn');
+        }
+
+        function resetParticipationStats() {
+            if (!hasPerm('reset_participation')) return;
+            // On stocke le timestamp actuel comme point de départ pour les stats
+            localStorage.setItem('stats_reset_timestamp', Date.now().toString());
+            updateParticipationSummary();
+            toast('Compteurs de participation remis à zéro. (Archives conservées)', 'ok');
+        }
+
+
+        /** Récupère les stats de participation pour tous les utilisateurs */
+        function getParticipationStats() {
+            const history = JSON.parse(localStorage.getItem('rapport_history')) || [];
+            const accounts = JSON.parse(localStorage.getItem('military_accounts')) || [];
+            const resetTime = parseInt(localStorage.getItem('stats_reset_timestamp')) || 0;
+            const stats = {};
+
+            accounts.forEach(a => {
+                stats[a.user.toUpperCase()] = { count: 0, missions: [] };
+            });
+
+            history.forEach(r => {
+                // On ne compte que les rapports créés APRÈS la dernière réinitialisation
+                if (r.id > resetTime && r.team && Array.isArray(r.team)) {
+                    r.team.forEach(u => {
+                        const name = u.toUpperCase();
+                        if (!stats[name]) stats[name] = { count: 0, missions: [] };
+                        stats[name].count++;
+                        stats[name].missions.push({ name: r.name, date: r.date });
+                    });
+                }
+            });
+            return stats;
+        }
+
+
+        /** Calcule et affiche le récapitulatif des participations */
+        function updateParticipationSummary() {
+            const containerHome = document.getElementById('home-participation-summary');
+            const containerRapport = document.getElementById('participation-summary');
+            
+            const stats = getParticipationStats();
+            const entries = Object.entries(stats).sort((a, b) => b[1].count - a[1].count);
+
+            const generateHTML = (isCompact = false) => {
+                if (entries.length === 0) {
+                    return '<p style="color:var(--muted); font-family:var(--font-mono); font-size:0.8rem;">Aucune donnée de participation.</p>';
+                }
+
+                if (isCompact) {
+                    // Version pour l'accueil : Cartes élégantes
+                    return `
+                    <div class="participation-grid">
+                        ${entries.map(([user, data]) => `
+                            <div class="participation-card ${data.count > 0 ? 'active' : ''}">
+                                <div class="participation-name">${esc(user)}</div>
+                                <div class="participation-stats">
+                                    <span class="participation-count">${data.count}</span>
+                                    <span class="participation-label">Missions</span>
+                                </div>
+                                ${data.missions.length > 0 ? `
+                                    <div class="participation-last" title="${esc(data.missions[0].name)}">
+                                        Dernière : ${esc(data.missions[0].name)}
+                                    </div>
+                                ` : `
+                                    <div class="participation-last" style="opacity: 0.3;">
+                                        Aucune mission
+                                    </div>
+                                `}
+                            </div>
+                        `).join('')}
+                    </div>`;
+                } else {
+                    // Version pour le rapport : Tableau détaillé
+                    return `
+                    <table style="width:100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.8rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border);">
+                        <thead>
+                            <tr style="background: rgba(76, 175, 80, 0.1); color: var(--green); text-align: left; text-transform: uppercase; letter-spacing: 1px;">
+                                <th style="padding: 10px; border-bottom: 1px solid var(--green);">Opérateur</th>
+                                <th style="padding: 10px; border-bottom: 1px solid var(--green); text-align: center;">Missions</th>
+                                <th style="padding: 10px; border-bottom: 1px solid var(--green);">Historique des Opérations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${entries.map(([user, data]) => `
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                    <td style="padding: 10px; color: var(--green); font-weight: bold;">${esc(user)}</td>
+                                    <td style="padding: 10px; text-align: center; color: var(--orange); font-weight: bold;">${data.count}</td>
+                                    <td style="padding: 10px; color: var(--muted); font-size: 0.75rem; line-height: 1.4;">
+                                        ${data.missions.length > 0 ? data.missions.map(m => `• ${esc(m.name)} <small>(${esc(m.date)})</small>`).join('<br>') : '—'}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>`;
+                }
+            };
+
+            if (containerHome) containerHome.innerHTML = generateHTML(true);
+            if (containerRapport) containerRapport.innerHTML = generateHTML(false);
+        }
+
+
+        // ═══════════════════════════════════════════════════════════
+        //  SIDEBAR — UTILISATEURS
+        // ═══════════════════════════════════════════════════════════
+        function updateUserList() {
+            const list = document.getElementById('user-list');
+            if (!list) return;
+            const users = JSON.parse(localStorage.getItem('military_users')) || [];
+            const stats = getParticipationStats();
+
+            list.innerHTML = users.length === 0
+                ? '<li style="color:var(--muted); font-size:0.75rem; padding:8px; font-family:var(--font-mono);">Aucune unité.</li>'
+                : users.map(u => {
+                    const count = stats[u.toUpperCase()] ? stats[u.toUpperCase()].count : 0;
+                    return `<li class="user-item">
+                        <div class="status-dot"></div>
+                        <span>${esc(u)}</span>
+                        <span style="margin-left: auto; font-size: 0.65rem; color: var(--orange); font-family: var(--font-mono); opacity: 0.8;">[${count}]</span>
+                    </li>`;
+                }).join('');
+        }
+
+
+        function clearUsers() {
+            if (!hasPerm('reset_list')) return;
+            localStorage.removeItem('military_users');
+            updateUserList();
+            toast('Liste des unités réinitialisée.', 'warn');
+        }
+
+
+        // ═══════════════════════════════════════════════════════════
+        //  CHAT
+        // ═══════════════════════════════════════════════════════════
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            const user = currentUser();
+            if (!msg) return;
+
+
+            appendChat(`<span class="msg-time">${nowTime()}</span><b style="color:var(--green)">${esc(user)} :</b> ${esc(msg)}`);
+            input.value = '';
+        }
+
+
+        function chatSystem(msg, color = 'var(--orange)') {
+            appendChat(`<span class="msg-time">${nowTime()}</span><b style="color:${color}">[SYS]</b> ${msg}`);
+        }
+
+
+        function appendChat(html) {
+            const area = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            area.appendChild(div);
+            area.scrollTop = area.scrollHeight;
+        }
+
+
+        // ═══════════════════════════════════════════════════════════
+        //  HELPERS
+        // ═══════════════════════════════════════════════════════════
+        function currentUser() {
+            return document.getElementById('username').value.trim().toUpperCase() || 'UNITÉ-X';
+        }
+
+        /** Vérifie si l'utilisateur a une permission spécifique */
+        function hasPerm(permId) {
+            const user = currentUser();
+            if (user === 'ADMIN') return true;
+
+            const accounts = JSON.parse(localStorage.getItem('military_accounts')) || [];
+            const account = accounts.find(a => a.user === user);
+            const perms = (account && account.perms) ? account.perms : ['accueil', 'operation', 'rs', 'zd', 'timer', 'rapport'];
+
+            if (perms.includes(permId)) return true;
+
+            toast('PRIVILÈGES INSUFFISANTS pour cette action.', 'err');
+            return false;
+        }
+    </script>
+</body>
+
+</html>
